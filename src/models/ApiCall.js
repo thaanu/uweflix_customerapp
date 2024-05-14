@@ -6,7 +6,7 @@ async function sendPost(url, data = {}, withToken = false ) {
         'Accept': 'application/json'
     };
     if ( withToken ) {
-        headers['Authorization'] = 'Bearer ' + localStorage.getItem('user_token');
+        headers['Authorization'] = `Bearer ${localStorage.getItem('user_token')}`;
     }
     return await axios.post( url, data, headers);
 }
@@ -17,7 +17,7 @@ async function sendGet(url, withToken = false ) {
         'Accept': 'application/json'
     };
     if ( withToken ) {
-        headers['Authorization'] = 'Bearer ' + localStorage.getItem('user_token');
+        headers['Authorization'] = `Bearer ${localStorage.getItem('user_token')}`;
     }
     return await axios.get( url, headers );
 }
