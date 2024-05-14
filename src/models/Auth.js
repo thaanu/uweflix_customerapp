@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2'
 import {sendPost, sendGet} from '@/models/ApiCall';
 const baseUrl = 'https://api.uweflix.naffah.me';
+
 export async function authenticate(email, password) {
 
     const response = await sendPost(`${baseUrl}/token`, {username: email, password: password});
