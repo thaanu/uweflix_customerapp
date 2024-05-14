@@ -2,9 +2,12 @@ import '@/assets/css/style.css'
 import '@/assets/fs/css/all.min.css'
 
 import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/js/bootstrap.js";
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
 import App from './App.vue'
 import router from './router'
