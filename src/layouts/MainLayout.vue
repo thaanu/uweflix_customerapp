@@ -1,5 +1,4 @@
 <template>
-    Welcome
     <slot></slot>
 </template>
 
