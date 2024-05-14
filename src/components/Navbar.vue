@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <img src="@/assets/logos/main-color.jpg" alt="Bootstrap" class="rounded" width="30" height="30">
@@ -25,7 +25,7 @@ const links = [
     {
         name: 'Movies',
         icon: 'fas fa-video',
-        href: '/'
+        href: '/movies'
     },
     {
         name: 'My Tickets',
