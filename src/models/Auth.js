@@ -1,35 +1,16 @@
-import axios from "axios";
+import {sendPost} from '@/models/ApiCall';
 const baseUrl = 'https://api.uweflix.naffah.me';
 export async function authenticate(email, password) {
-    const response = await axios.post( `${baseUrl}/token`, { username: email,  password: password}, {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json'
-        }
-    });
+    
+    const response = await sendPost(`${baseUrl}/token`, {username: email, password: password});
 
-    console.log('response',response);
-    console.log('status',response.response.status);
-    // todo: find a way to error handle axios
+    console.log('api_call_response', response);
 
-    if (response.response.status != 200) {
-        let notify = document.querySelector('#login_notification');
-        notify.style.display = 'block';
-        notify.textContent = response.response.statusText;
-        return false;
+    if ( response.response.status != 200 ) {
+        alert("Whoops");
     } else {
         localStorage.setItem('user_token', response.data.access_token);
-        return true;
     }
-
-
-    // .then(() => {
-    //     
-    // }).catch((error) => {
-    //     // error.response.status
-    //     console.log(error);
-    //     
-    // })
     
 }
 
