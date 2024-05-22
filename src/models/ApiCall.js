@@ -8,7 +8,7 @@ async function sendPost(url, data = {}, withToken = false ) {
     if ( withToken ) {
         headers['Authorization'] = `Bearer ${localStorage.getItem('user_token')}`;
     }
-    return await axios.post( url, data, headers);
+    return await axios.post( url, data, {headers: headers} );
 }
 
 async function sendGet(url, withToken = false ) {
@@ -19,7 +19,7 @@ async function sendGet(url, withToken = false ) {
     if ( withToken ) {
         headers['Authorization'] = `Bearer ${localStorage.getItem('user_token')}`;
     }
-    return await axios.get( url, headers );
+    return await axios.get( url, {headers: headers} );
 }
 
 export {sendPost, sendGet}
