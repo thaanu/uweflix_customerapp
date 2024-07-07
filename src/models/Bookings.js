@@ -5,4 +5,14 @@ async function getMyTickets() {
     return response.data;
 }
 
-export { getMyTickets }
+async function getBookedTickets( scheduleid ) {
+    const response = await sendGet(`/bookings/bookings/booked-seats/${scheduleid}`, true);
+    return response.data;
+}
+
+async function sendBooking( payload ) {
+    const response = await sendPost(``, payload)
+    return response.data;
+}
+
+export { getMyTickets, getBookedTickets, sendBooking }

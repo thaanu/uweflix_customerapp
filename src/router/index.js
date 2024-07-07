@@ -3,6 +3,8 @@ import Login from '@/pages/Login.vue'
 import Movies from '@/pages/Movies.vue'
 import MyTickets from '@/pages/MyTickets.vue'
 import ClubHouse from '@/pages/ClubHouse.vue'
+import Purchase from '@/pages/Purchase.vue'
+import ChooseSeats from '@/pages/ChooseSeats.vue'
 import Signout from '@/pages/Signout.vue'
 
 const router = createRouter({
@@ -27,6 +29,16 @@ const router = createRouter({
       path: '/club-house',
       name: 'club-house',
       component: ClubHouse
+    },
+    {
+      path: '/purchase/:movieid',
+      name: 'ticket-purchase',
+      component: Purchase
+    },
+    {
+      path: '/purchase/seats/:movieid/:hallid/:scheduleid',
+      name: 'choose-seats',
+      component: ChooseSeats
     },
     {
       path: '/signout',

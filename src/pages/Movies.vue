@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import {getMovies} from '@/models/Movies.js';
+import {getMovies, getMovieSchedule} from '@/models/Movies.js';
 import SessionLayout from '@/layouts/SessionLayout.vue'
 import Carousel from '@/components/Carousel.vue'
 import MovieTag from '@/components/MovieTag.vue'
@@ -36,7 +36,6 @@ onBeforeMount(async () => {
         newMovies.push(x);
     });
     movies.value = newMovies;
-    console.log(movies);
     isLoading.value = false
 })
 

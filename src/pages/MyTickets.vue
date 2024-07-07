@@ -2,42 +2,41 @@
     <SessionLayout>
         <div class="container my-5">
             <h3 class="mb-5 text-uppercase"><i style="margin-right: 10px;" class="fas fa-ticket"></i> My Tickets</h3>
-            <ticket-tag :tickets="tickets" />
+            <Alert v-if="serverError" :message="serverError" alerttype="alert-danger" icon="fas fa-circle-exclamation" />
+            <p v-if="isLoading">Loading</p>
+            <ticket-tag :myBookings="myBookings" />
+            <Alert v-if="myBookings.length === 0" message="You do not have any tickets" alerttype="alert-info" icon="fas fa-circle-info" />
         </div>
     </SessionLayout>
 </template>
 
 <script setup >
+import {getMyTickets} from '@/models/Bookings.js';
 import SessionLayout from '@/layouts/SessionLayout.vue'
-</script>
+import { onBeforeMount, ref } from 'vue';
+import Alert from '@/components/Alerts.vue';
 
-<script>
-import TicketTag from '@/components/TicketTag.vue';
-export default {
-    components: {
-        'ticket-tag' : TicketTag
-    },
-    data() {
-        return {
-            tickets: [
-                {
-                    ticket_no: 1111,
-                    datetime: '2024-05-11 15:30:00',
-                    qty: 2,
-                    movie_id: 112,
-                    price: 80,
-                    status: 'on-schedule'
-                },
-                {
-                    ticket_no: 1114,
-                    datetime: '2024-05-15 16:30:00',
-                    qty: 1,
-                    movie_id: 113,
-                    price: 40,
-                    status: 'on-schedule'
-                }
-            ]
-        }
+const serverError = ref(undefined);
+const isLoading = ref(false);
+const myBookings = ref([]);
+
+onBeforeMount( async () => {
+    isLoading.value = true;
+
+    try {
+        const allMyTickets = await getMyTickets();
+        const filteredTickets = [];
+        allMyTickets.forEach(ticket => {
+            const x = ticket;
+            // Manipulate
+            filteredTickets.push(x);
+        });
+        myBookings.value = filteredTickets;
     }
-}
+    catch ( err ) {
+        serverError.value = err.message;
+    }
+
+    isLoading.value = false
+} );
 </script>
