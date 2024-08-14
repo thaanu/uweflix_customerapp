@@ -1,4 +1,4 @@
-import {sendPost, sendGet} from '@/models/ApiCall';
+import {sendPost, sendGet, changeHeaderAttribute} from '@/models/ApiCall';
 
 async function getMovies() {
     const response = await sendGet(`/films/films?start=1&limit=999`, true);
@@ -20,4 +20,12 @@ async function getScheduleById(scheduleId) {
     return response.data;
 }
 
-export { getMovies, getOneMovieById, getMovieSchedule, getScheduleById }
+async function makeReservation( payload )
+{
+    changeHeaderAttribute('Content-Type', 'application/json');
+    changeHeaderAttribute('Accept', 'application/json');
+    const response = await sendPost(`/bookings/users/booking`, payload, true);
+    return response.data;
+}
+
+export { getMovies, getOneMovieById, getMovieSchedule, getScheduleById, makeReservation }

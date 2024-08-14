@@ -10,9 +10,14 @@ async function getBookedTickets( scheduleid ) {
     return response.data;
 }
 
+async function getSingleTicket( batchReference ) {
+    const response = await sendGet(`/bookings/batch/bookings/${batchReference}`, true);
+    return response.data;
+}
+
 async function sendBooking( payload ) {
     const response = await sendPost(``, payload)
     return response.data;
 }
 
-export { getMyTickets, getBookedTickets, sendBooking }
+export { getMyTickets, getBookedTickets, sendBooking, getSingleTicket}

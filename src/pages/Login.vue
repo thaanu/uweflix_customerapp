@@ -35,7 +35,9 @@
 import MainLayout from '@/layouts/MainLayout.vue'
 import Carousel from '@/components/Carousel.vue'
 
+import { getMe } from '@/models/Myself.js';
 import { authenticate } from '@/models/Auth';
+
 import {ref} from 'vue'
 import {useRouter} from 'vue-router'
 
@@ -50,6 +52,7 @@ const formProps = {
 async function submitForm() {
     isLoading.value = true;
     await authenticate(formProps.user_email, formProps.user_pass);
+    localStorage.setItem('user', JSON.stringify(await getMe()));
     isLoading.value = false;
     await router.push({name: 'movies'});
     return false;

@@ -77,9 +77,10 @@ for ( let r = 0; r < noOfRows; r++ ) {
     for ( let c = 1; c <= noOfCols; c++ ) {
 
         let seatId = `${letters[r]}#${c}`;
+        let seatIdUnhashed = `${letters[r]}${c}`;
         let isBooked = false;
 
-        if ( bookedSeats.length > 0 && bookedSeats.includes(seatId) ) {
+        if ( bookedSeats.length > 0 && bookedSeats.includes(seatIdUnhashed) ) {
             isBooked = true;
         }
 

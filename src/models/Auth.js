@@ -12,10 +12,9 @@ export async function authenticate(email, password) {
             icon: "error"
         });
     } else {
+        localStorage.setItem('user_email', email);
         localStorage.setItem('user_token', response.data.access_token);
     }
     
 }
 
-// nishawl.naseer@outlook.com
-// h0KcT2U8tFJZ5H1LSexLBQ6T

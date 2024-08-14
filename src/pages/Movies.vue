@@ -15,9 +15,8 @@
 
 <script setup>
 import {getMovies, getMovieSchedule} from '@/models/Movies.js';
-import SessionLayout from '@/layouts/SessionLayout.vue'
-import Carousel from '@/components/Carousel.vue'
-import MovieTag from '@/components/MovieTag.vue'
+import SessionLayout from '@/layouts/SessionLayout.vue';
+import MovieTag from '@/components/MovieTag.vue';
 import axios from 'axios';
 import { onBeforeMount, ref } from 'vue';
 
@@ -33,6 +32,7 @@ onBeforeMount(async () => {
         const x = movie;
         x['show_desc'] = false;
         x['rate'] = 0;
+        x['poster_image'] = `https://api.uweflix.naffah.me/films/images/image/${movie.id}-poster.jpg`;
         newMovies.push(x);
     });
     movies.value = newMovies;

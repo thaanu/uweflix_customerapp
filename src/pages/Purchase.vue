@@ -60,8 +60,8 @@ onBeforeMount( async () => {
     try {
         const movieSchedules = await getMovieSchedule(selectedMovieId);
         const xyzSchedule = [];
-        if ( movieSchedules.schedules.length ) {
-            movieSchedules.schedules.forEach(schedule => {
+        if ( movieSchedules.length ) {
+            movieSchedules.forEach(schedule => {
                 let x = schedule;
                 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                 let showTime = new Date(schedule.show_time);
