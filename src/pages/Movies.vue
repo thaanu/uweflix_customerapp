@@ -1,3 +1,31 @@
+<script setup>
+import {getMovies, getMovieSchedule} from '@/models/Movies.js';
+import SessionLayout from '@/layouts/SessionLayout.vue';
+import MovieTag from '@/components/MovieTag.vue';
+import axios from 'axios';
+import { onBeforeMount, ref } from 'vue';
+const baseURL = import.meta.env.VITE_API_BASE_URL;
+
+const isLoading = ref(false)
+
+const movies = ref([]);
+
+onBeforeMount(async () => {
+    isLoading.value = true
+    const newMovie = await getMovies();
+    const newMovies = [];
+    newMovie.forEach(movie => {
+        const x = movie;
+        x['show_desc'] = false;
+        x['rate'] = 0;
+        x['poster_image'] = `${baseURL}/films/images/image/${movie.id}-poster.jpg`;
+        newMovies.push(x);
+    });
+    movies.value = newMovies;
+    isLoading.value = false
+})
+
+</script>
 <template>
     <SessionLayout>
         <!-- <div class="mb-5">
@@ -12,31 +40,3 @@
         </div>
     </SessionLayout>
 </template>
-
-<script setup>
-import {getMovies, getMovieSchedule} from '@/models/Movies.js';
-import SessionLayout from '@/layouts/SessionLayout.vue';
-import MovieTag from '@/components/MovieTag.vue';
-import axios from 'axios';
-import { onBeforeMount, ref } from 'vue';
-
-const isLoading = ref(false)
-
-const movies = ref([]);
-
-onBeforeMount(async () => {
-    isLoading.value = true
-    const newMovie = await getMovies();
-    const newMovies = [];
-    newMovie.forEach(movie => {
-        const x = movie;
-        x['show_desc'] = false;
-        x['rate'] = 0;
-        x['poster_image'] = `https://api.uweflix.naffah.me/films/images/image/${movie.id}-poster.jpg`;
-        newMovies.push(x);
-    });
-    movies.value = newMovies;
-    isLoading.value = false
-})
-
-</script>

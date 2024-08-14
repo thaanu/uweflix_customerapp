@@ -30,6 +30,7 @@ import SessionLayout from '@/layouts/SessionLayout.vue';
 import MovieDetailedTag from '@/components/MovieDetailedTag.vue';
 import Alert from '@/components/Alerts.vue';
 import { onBeforeMount, ref } from 'vue';
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 const route = useRoute();
 
@@ -50,7 +51,9 @@ onBeforeMount( async () => {
     // Get movie information
     try {
         const newMovie = await getOneMovieById(selectedMovieId);
+        newMovie.poster_image = `${baseURL}/films/images/image/${newMovie.id}-poster.jpg`;
         movie.value = newMovie;
+        console.log(movie.value)
     }
     catch ( err ) {
         serverError.value = 'Unable to fetch movie information';

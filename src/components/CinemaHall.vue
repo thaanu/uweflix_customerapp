@@ -1,13 +1,3 @@
-<template>
-    <div class="screen">SCREEN</div>
-    <div class="seat_row" v-for="rows in seats">
-        <button @click="selectSeats(seat.seat_no)" v-for="seat in rows" type="button" :disabled="seat.booked" :class="getButtonClasses(seat.booked, seat.selected)" class="btn" style="margin-right: 3px;">
-            {{ seat.seat_no }}
-        </button>
-    </div>
-    <p class="mt-5 text-center"><span class="text-danger">Red Color</span> seats are already booked</p>
-</template>
-
 <script setup>
 import { ref } from 'vue';
 import Swal from 'sweetalert2';
@@ -97,23 +87,33 @@ for ( let r = 0; r < noOfRows; r++ ) {
 
 </script>
 
+<template>
+    <div class="screen">SCREEN</div>
+    <div class="seat_row" v-for="rows in seats">
+        <button @click="selectSeats(seat.seat_no)" v-for="seat in rows" type="button" :disabled="seat.booked" :class="getButtonClasses(seat.booked, seat.selected)" class="btn">
+            {{ seat.seat_no }}
+        </button>
+    </div>
+    <p class="mt-5 text-center"><span class="text-danger">Red Color</span> seats are already booked</p>
+</template>
+
 <style>
 .screen {
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #999;
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 }
 
 .seat_row {
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 2px;
 }
 
 .seat_row .btn {
-    width: 60px;
-    margin: 0 5px;
+    width: 100px;
+    margin: 0 2px;
 }
 </style>
