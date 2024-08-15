@@ -1,7 +1,7 @@
 <template>
     <div v-for="movie in movies" class="col-sm-6 col-lg-3 mb-3">
         <div class="card movie-card" @click="movie.show_desc=!movie.show_desc">
-            <div style="height: 450px; background: orange; overflow: hidden;">
+            <div style="height: 450px; background: white; overflow: hidden;">
                 <img v-if="!movie.poster_image" src="@/assets/dummy.jpeg" >
                 <img v-else :src="movie.poster_image" class="img-fluid card-img-top" style="height: 100%" :alt="movie.title">
             </div>
