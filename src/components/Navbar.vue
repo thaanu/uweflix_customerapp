@@ -38,6 +38,11 @@ const links = [
         href: '/club-house'
     },
     {
+        name: 'My Cards',
+        icon: 'fas fa-credit-card',
+        href: '/my-cards'
+    },
+    {
         name: 'Signout',
         icon: 'fas fa-right-to-bracket',
         href: '/signout'

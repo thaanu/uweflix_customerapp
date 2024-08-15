@@ -1,3 +1,22 @@
+<script setup >
+import MainLayout from '@/layouts/MainLayout.vue'
+import { onMounted } from 'vue';
+
+onMounted(() => {
+    localStorage.removeItem('user_token');
+    localStorage.removeItem('user_account');
+    localStorage.removeItem('user_email');
+    localStorage.removeItem('user_pass');
+    localStorage.removeItem('seat_numbers');
+    localStorage.removeItem('billing_info');
+    localStorage.removeItem('account_type');
+    localStorage.removeItem('schedule_id');
+    localStorage.removeItem('movie_info');
+    localStorage.removeItem('hall');
+    localStorage.removeItem('user');
+});
+
+</script>
 <template>
     <MainLayout>
         <div class="container my-5">
@@ -7,13 +26,3 @@
         </div>
     </MainLayout>
 </template>
-
-<script setup >
-import MainLayout from '@/layouts/MainLayout.vue'
-import { onMounted } from 'vue';
-
-onMounted(() => {
-    localStorage.removeItem('user_token');
-});
-
-</script>

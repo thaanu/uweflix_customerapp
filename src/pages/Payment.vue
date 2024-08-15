@@ -1,18 +1,20 @@
 
 <script setup>
-import { getHallById } from '@/models/Halls.js';
-import { getScheduleById, makeReservation } from '@/models/Movies.js';
-import { getBookedTickets, sendBooking } from '@/models/Bookings.js';
-import { getUserCreditCard, getClubCreditCard } from '@/models/CreditCard.js';
+import {getAccountDetails} from '@/helpers/User.js';
+import { makeReservation } from '@/models/Movies.js';
+import { getUserCreditCard } from '@/models/CreditCard.js';
 
 import { useRouter } from 'vue-router';
 import SessionLayout from '@/layouts/SessionLayout.vue';
 import Alert from '@/components/Alerts.vue';
-import { computed, onBeforeMount, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const router = useRouter();
 
-let scheduleId = localStorage.getItem('schedule_id');
+let scheduleId = parseInt(localStorage.getItem('schedule_id'));
+
+const userAccountDetails = getAccountDetails();
+const userAccountType = localStorage.getItem('account_type');
 
 const serverError = ref(undefined);
 const isLoading = ref(false);
@@ -21,7 +23,7 @@ const processBookingSubmision = ref(false);
 let theSelectedSeats = ref([]);
 let billing = ref({});
 let creditCard = ref([]);
-let uweFlexAccountBalance = ref(100);
+let uweFlexAccountBalance = ref(userAccountDetails.balance);
 let uweFlexAccountBalanceAfter = ref(0);
 
 let creditCardAuth = ref(false);
@@ -63,36 +65,36 @@ let submitBooking = async () => {
 
         let selectedSeats = JSON.parse(theSelectedSeats.value);
 
-        for ( let i = 0; i < selectedSeats.length; i++ ) {
-
-            try {
-
-                let payload = {
-                    person : {
-                        seat_no: selectedSeats[i].seat_number,
-                        person_type_id: selectedSeats[i].person_type,
-                        user_id: userId
-                    },
-                    schedule_id: parseInt(scheduleId),
-                    account_id: 1, // dummy koh 1, prod ga fahun change kuraanee
-                    class_name: "SINGLE_BOOKING"
-                }
-    
-                let response = await makeReservation(payload);
-
-                batchRef.value = response.batch_ref;
-
-                if ( response.status == 200 ) {
-                    processed = processed + 1;
-                }
-
+        try {
+            
+            let payload = {
+                bookings: [],
+                club_id : 0,
+                schedule_id : scheduleId,
+                account_id : userAccountDetails.id,
+                cash : 0,
+                class_name : "MULTIPLE_BOOKINGS"
             }
-            catch (err) {
-                processBookingSubmision.value = false;
-                console.error(err);
+            
+            // Add all the seats
+            for ( let i = 0; i < selectedSeats.length; i++ ) {
+                payload.bookings.push({
+                    seat_no : selectedSeats[i].seat_number,
+                    person_type_id : selectedSeats[i].person_type,
+                    user_id : userId
+                });
             }
+            
+            let response = await makeReservation(payload);
+
+            batchRef.value = response[0].batch_ref;
 
         }
+        catch (err) {
+            processBookingSubmision.value = false;
+            console.error(err);
+        }
+
 
         processBookingSubmision.value = false;
         
@@ -122,7 +124,7 @@ uweFlexAccountBalanceAfter.value = uweFlexAccountBalance.value - billing.value.t
                     <p>Your UWE Flex Account Balance</p>
 
                     <Alert alerttype="alert alert-warning" v-if="noMoney">
-                        You are required to pay {{ billing.total }} UWE Coins, but your account balance is {{ uweFlexAccountBalance }} UWE Coins. Please top-up your account.
+                        You are required to pay £{{ billing.total }}, but your account balance is £{{ uweFlexAccountBalance }}. Please top-up your account.
                     </Alert>
 
                     <div class="row">
@@ -136,8 +138,8 @@ uweFlexAccountBalanceAfter.value = uweFlexAccountBalance.value - billing.value.t
                                             Pay Now
                                         </button>
                                     </div>
-                                    <p>Personal Card</p>
-                                    <p><span class="text-success" style="font-size: 4rem; display: block;">{{ uweFlexAccountBalance }}</span> UWE Coins</p>
+                                    <p class="text-uppercase">{{userAccountType}}</p>
+                                    <p><span class="text-success" style="font-size: 4rem; display: block;">£{{ uweFlexAccountBalance }}</span></p>
                                 </div>
                             </div>
                         </div>
@@ -155,19 +157,23 @@ uweFlexAccountBalanceAfter.value = uweFlexAccountBalance.value - billing.value.t
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             Ticket Price
-                                            <span>{{ billing.ticket_price }}</span>
+                                            <span>£{{ billing.ticket_price.toFixed(2) }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             Subtotal
-                                            <span>{{ billing.subtotal }}</span>
+                                            <span>£{{ billing.subtotal.toFixed(2) }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Discount
+                                            <span>£{{ billing.discount.toFixed(2) }}</span>
+                                        </li>
+                                        <!-- <li class="list-group-item d-flex justify-content-between align-items-center">
                                             GST 8%
                                             <span>{{ billing.gst }}</span>
-                                        </li>
+                                        </li> -->
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             Total
-                                            <span>{{ billing.total.toFixed(2) }}</span>
+                                            <span>£{{ billing.total.toFixed(2) }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             Balance
@@ -211,8 +217,6 @@ uweFlexAccountBalanceAfter.value = uweFlexAccountBalance.value - billing.value.t
                             </div>
                         </div>
                     </div>
-
-
 
                 </div>
             </div>

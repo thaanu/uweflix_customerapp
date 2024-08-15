@@ -13,6 +13,7 @@ export async function authenticate(email, password) {
         });
     } else {
         localStorage.setItem('user_email', email);
+        localStorage.setItem('user_pass', password);
         localStorage.setItem('user_token', response.data.access_token);
     }
     

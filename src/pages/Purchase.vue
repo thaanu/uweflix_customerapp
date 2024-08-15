@@ -1,7 +1,8 @@
 <script setup>
-
+import { extractUser } from '@/helpers/User.js';
 import { RouterLink, useRoute } from 'vue-router';
 import {getMovieSchedule, getOneMovieById} from '@/models/Movies.js';
+import {getPersonalAccount} from '@/models/Accounts.js';
 import SessionLayout from '@/layouts/SessionLayout.vue';
 import MovieDetailedTag from '@/components/MovieDetailedTag.vue';
 import Alert from '@/components/Alerts.vue';
@@ -9,8 +10,9 @@ import { onBeforeMount, ref } from 'vue';
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 const user = JSON.parse(localStorage.getItem('user'));
+const userFromToken = extractUser();
 
-const isClubRap = ref(true);
+const isClubRap = ref(userFromToken.is_club_rep);
 const accountType = ref('personal'); // by default account type is 'personal'
 
 const route = useRoute();
@@ -28,6 +30,13 @@ const schedules = ref([]);
 onBeforeMount( async () => {
     isLoading.value = true;
     isScheduleLoading.value = true;
+
+    // Get account information
+    try {
+        localStorage.setItem('user_account', JSON.stringify(await getPersonalAccount(user.id)));
+    } catch ( err ) {
+        console.log("Unable to fetch user account information.",err);
+    }
 
     // Get movie information
     try {

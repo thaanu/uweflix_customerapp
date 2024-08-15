@@ -33,7 +33,7 @@ onBeforeMount( async () => {
                 <Alert v-if="serverError" :message=serverError alerttype="alert-danger" icon="fas fa-circle-info" />
                 <template v-else>
                     <div class="row">
-                        <div v-for="ticket in theBooking" class="col-lg-6">
+                        <div v-for="ticket in theBooking" class="col-lg-4 col-md-6 mb-3">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center mb-3">

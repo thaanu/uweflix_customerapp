@@ -28,10 +28,27 @@ let theSelectedSeats = ref([]);
 let billing = ref({
     number_of_tickets: 0,
     ticket_price: 0,
+    discount: 0,
     gst: 0,
     subtotal: 0,
     total: 0
 });
+
+// Recalculating after adding discounts
+const recalculate = () => {
+    let totalDiscount = 0;
+    // Calculate discounts
+    theSelectedSeats.value.forEach(seat => {
+        personTypes.forEach(pt => {
+            if ( seat.person_type == pt.id ) {
+                seat.discount = (billing.value.ticket_price * pt.discount_amount) / 100;
+                totalDiscount = totalDiscount + seat.discount;
+            }
+        });
+    });
+    billing.value.discount = totalDiscount;
+    billing.value.total = billing.value.subtotal - totalDiscount;
+}
 
 const calculateTickets = (selectedTickets) => {
 
@@ -40,18 +57,18 @@ const calculateTickets = (selectedTickets) => {
     selectedTickets.forEach(seat => {
         theSelectedSeats.value.push({
             seat_number: seat,
+            price: null,
             person_type: null
         });
     });
 
     let totalTickets = selectedTickets.length;
     let subtotal = totalTickets * billing.value.ticket_price;
-    let gst = (subtotal * 8) / 100;
+    let gst = 0; // Not using GST for this demo
     let total = subtotal + gst;
 
     billing.value.number_of_tickets = totalTickets;
     billing.value.subtotal = subtotal;
-    billing.value.gst = gst;
     billing.value.total = total;
 
 }
@@ -126,9 +143,10 @@ let submitBooking = async () => {
                             <div class="card mb-3">
                                 <div class="card-body">
                                     <div class="mb-3">Seat # {{ seat.seat_number }}</div>
-                                    <select class="form-select" v-model="theSelectedSeats[i].person_type" >
+                                    <select @change="recalculate" class="form-select" v-model="theSelectedSeats[i].person_type" >
                                         <option :value="person.id" v-for="person in personTypes" >{{ person.person_type }}</option>
                                     </select>
+                                    <small v-if="seat.discount" class="mt-2 d-block">Ticket Discount <strong>{{ seat.discount }}</strong></small>
                                 </div>
                             </div>
                         </div>
@@ -140,16 +158,20 @@ let submitBooking = async () => {
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Ticket Price
-                                <span>{{ billing.ticket_price }}</span>
+                                <span>{{ billing.ticket_price.toFixed(2) }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Subtotal
-                                <span>{{ billing.subtotal }}</span>
+                                <span>{{ billing.subtotal.toFixed(2) }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Discount
+                                <span>{{ billing.discount.toFixed(2) }}</span>
+                            </li>
+                            <!-- <li class="list-group-item d-flex justify-content-between align-items-center">
                                 GST 8%
                                 <span>{{ billing.gst }}</span>
-                            </li>
+                            </li> -->
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Total
                                 <span>{{ billing.total.toFixed(2) }}</span>

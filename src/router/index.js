@@ -6,6 +6,7 @@ import ViewTicket from '@/pages/ViewTicket.vue'
 import ClubHouse from '@/pages/ClubHouse.vue'
 import Purchase from '@/pages/Purchase.vue'
 import Payment from '@/pages/Payment.vue'
+import MyCards from '@/pages/MyCards.vue'
 import ChooseSeats from '@/pages/ChooseSeats.vue'
 import Signout from '@/pages/Signout.vue'
 
@@ -48,8 +49,13 @@ const router = createRouter({
       component: ChooseSeats
     },
     {
+      path: '/my-cards',
+      name: 'my-cards',
+      component: MyCards
+    },
+    {
       path: '/payment',
-      name: 'paymnet',
+      name: 'payment',
       component: Payment
     },
     {

@@ -24,7 +24,7 @@ async function makeReservation( payload )
 {
     changeHeaderAttribute('Content-Type', 'application/json');
     changeHeaderAttribute('Accept', 'application/json');
-    const response = await sendPost(`/bookings/users/booking`, payload, true);
+    const response = await sendPost(`/bookings/users/bookings/multiple`, payload, true);
     return response.data;
 }
 
