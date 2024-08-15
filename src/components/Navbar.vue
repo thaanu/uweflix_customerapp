@@ -32,11 +32,11 @@ const links = [
         icon: 'fas fa-ticket',
         href: '/my-tickets'
     },
-    {
-        name: 'Club House',
-        icon: 'fas fa-house-user',
-        href: '/club-house'
-    },
+    // {
+    //     name: 'Club House',
+    //     icon: 'fas fa-house-user',
+    //     href: '/club-house'
+    // },
     {
         name: 'My Cards',
         icon: 'fas fa-credit-card',
