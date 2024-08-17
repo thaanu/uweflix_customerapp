@@ -31,13 +31,6 @@ onBeforeMount( async () => {
     isLoading.value = true;
     isScheduleLoading.value = true;
 
-    // Get account information
-    try {
-        localStorage.setItem('user_account', JSON.stringify(await getPersonalAccount(user.id)));
-    } catch ( err ) {
-        console.log("Unable to fetch user account information.",err);
-    }
-
     // Get movie information
     try {
         const newMovie = await getOneMovieById(selectedMovieId);
