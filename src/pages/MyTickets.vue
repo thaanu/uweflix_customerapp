@@ -37,7 +37,7 @@ onBeforeMount( async () => {
             <Alert v-if="serverError" :message="serverError" alerttype="alert-danger" icon="fas fa-circle-exclamation" />
             <p v-if="isLoading">Loading</p>
             <TicketTag v-else :myBookings="myBookings" />
-            <Alert v-if="myBookings.length === 0" message="You do not have any tickets" alerttype="alert-info" icon="fas fa-circle-info" />
+            <Alert v-if="myBookings.length === 0 && !isLoading" message="You do not have any tickets" alerttype="alert-info" icon="fas fa-circle-info" />
         </div>
     </SessionLayout>
 </template>
