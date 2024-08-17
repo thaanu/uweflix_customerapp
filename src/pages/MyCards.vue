@@ -5,7 +5,7 @@ import { RouterLink, useRoute } from 'vue-router';
 import {getPersonalAccount} from '@/models/Accounts.js';
 import SessionLayout from '@/layouts/SessionLayout.vue';
 import Alert from '@/components/Alerts.vue';
-import { getUserCards, createNewCard } from '@/models/Cards';
+import { getUserCards, createNewCard, creditCardType } from '@/models/Cards';
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 const user = JSON.parse(localStorage.getItem('user'));
@@ -25,6 +25,29 @@ const form = ref({
     expiry_date: null,
     account_id: user_account.id ?? null
 });
+
+const getCardIcon = ( cardType ) => {
+    switch (cardType) {
+        case 'MASTERCARD':
+            return 'fa-brands fa-cc-mastercard';
+            break;
+        case 'VISA':
+            return 'fa-brands fa-cc-visa';
+            break;
+    
+        default:
+            break;
+    }
+}
+
+const dFormat = (dateString) => {
+    const dt = new Date(dateString);
+    let year  = dt.getFullYear();
+    let month = (dt.getMonth() + 1).toString().padStart(2, "0");
+    let day   = dt.getDate().toString().padStart(2, "0");
+    return `${month}/${year}`;
+
+}
 
 const createCard = async () => {
     isLoading.value = true;
@@ -98,17 +121,12 @@ onBeforeMount( async () => {
                         <div class="col-lg-8">
                             <div class="row">
                                 <div v-for="card in myCards" class="col-lg-6 mb-3">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between items-align-center">
-                                                <div>
-                                                    <p><i class="fa-regular fa-credit-card" style="margin-right: 10px"></i>{{ card.holder_name }}</p>
-                                                </div>
-                                                <button class="btn btn-sm btn-outline-primary">Edit</button>
-                                            </div>
-                                            <p>{{ card.card_number }}</p>
-                                            <p>{{ card.exp_date }}</p>
-                                        </div>
+                                    <div class="my-card">
+                                        <i class="card-icon" :class="getCardIcon(creditCardType(card.card_number))"></i>
+                                        <i class="fa-solid fa-wifi"></i>
+                                        <div class="card-number">{{ card.card_number }}</div>
+                                        <div class="title">{{ card.holder_name }}</div>
+                                        <div class="expiry-date">{{ dFormat(card.exp_date) }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -119,3 +137,57 @@ onBeforeMount( async () => {
         </div>
     </SessionLayout>
 </template>
+
+<style>
+.my-card {
+
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    max-height: 300px;
+    height: 230px;
+    background: url(https://plus.unsplash.com/premium_photo-1666286163385-abe05f0326c4?q=80&w=3175&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D) center center;
+    background-size: cover;
+    position: relative;
+}
+
+.my-card .title {
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    position: absolute;
+    bottom: 30px;
+    left: 20px;
+    font-size: 1.2rem;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+}
+.my-card .card-icon {
+    font-size: 3rem;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.my-card .fa-wifi {
+    position: absolute;
+    top: 70px;
+    left: 50px;
+    font-size: 2.5rem;
+    color: #fff;
+    transform: rotate(90deg);
+}
+.my-card .card-number {
+    letter-spacing: 6px;
+    font-size: 1.2rem;
+    position: absolute;
+    bottom: 70px;
+    left: 20px;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+}
+.my-card .expiry-date {
+    font-size: 1rem;
+    color: #fff;
+    position: absolute;
+    bottom: 70px;
+    right: 20px;
+}
+</style>
