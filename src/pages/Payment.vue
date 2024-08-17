@@ -177,7 +177,7 @@ uweFlexAccountBalanceAfter.value = uweFlexAccountBalance.value - billing.value.t
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             Balance
-                                            <span>{{ uweFlexAccountBalanceAfter.toFixed(2) }}</span>
+                                            <span>£{{ uweFlexAccountBalanceAfter.toFixed(2) }}</span>
                                         </li>
                                     </ul>
 

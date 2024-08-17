@@ -14,7 +14,10 @@ let noOfCols = hall.seats_per_row;
 let _selectedSeats = [];
 
 // Business Logics
-const allowedSelectableSeats = 3;
+const personalAccountSeats = 3;
+const clubAccountSeats = 10;
+const accountType = localStorage.getItem('account_type');
+const allowedSelectableSeats = (accountType == 'personal' ? personalAccountSeats : clubAccountSeats);
 
 const selectSeats = ( seatNumber ) => {
     seats.value.forEach(row => {
