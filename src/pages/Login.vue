@@ -1,3 +1,35 @@
+<script setup>
+import MainLayout from '@/layouts/MainLayout.vue'
+import Carousel from '@/components/Carousel.vue'
+
+import { getPersonalAccount } from '@/models/Accounts.js';
+import { getMe } from '@/models/Myself.js';
+import { authenticate } from '@/models/Auth';
+
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
+
+const isLoading = ref(false);
+const router = useRouter();
+
+const formProps = {
+    user_email : '',
+    user_pass : ''
+};
+
+async function submitForm() {
+    isLoading.value = true;
+    await authenticate(formProps.user_email, formProps.user_pass);
+    let user = await getMe();
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('user_account', JSON.stringify(await getPersonalAccount(user.id)));
+    isLoading.value = false;
+    await router.push({name: 'movies'});
+    return false;
+}
+
+</script>
+
 <template>
     <MainLayout>
         <!-- <Carousel /> -->
@@ -30,32 +62,3 @@
         </div>
     </MainLayout>
 </template>
-
-<script setup>
-import MainLayout from '@/layouts/MainLayout.vue'
-import Carousel from '@/components/Carousel.vue'
-
-import { getMe } from '@/models/Myself.js';
-import { authenticate } from '@/models/Auth';
-
-import {ref} from 'vue'
-import {useRouter} from 'vue-router'
-
-const isLoading = ref(false);
-const router = useRouter();
-
-const formProps = {
-    user_email : '',
-    user_pass : ''
-};
-
-async function submitForm() {
-    isLoading.value = true;
-    await authenticate(formProps.user_email, formProps.user_pass);
-    localStorage.setItem('user', JSON.stringify(await getMe()));
-    isLoading.value = false;
-    await router.push({name: 'movies'});
-    return false;
-}
-
-</script>
