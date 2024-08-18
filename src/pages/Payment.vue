@@ -1,64 +1,49 @@
-
 <script setup>
-import {getAccountDetails} from '@/helpers/User.js';
-import { makeReservation } from '@/models/Movies.js';
-import { getUserCreditCard } from '@/models/CreditCard.js';
-
 import { useRouter } from 'vue-router';
 import SessionLayout from '@/layouts/SessionLayout.vue';
 import Alert from '@/components/Alerts.vue';
 import { computed, ref } from 'vue';
+import { getAccountDetails, getClubAccountDetails } from '@/helpers/User.js';
+import { makeReservation } from '@/models/Movies.js';
 
 const router = useRouter();
 
-let scheduleId = parseInt(localStorage.getItem('schedule_id'));
+const serverError               = ref(undefined);
+const isLoading                 = ref(false);
+const processBookingSubmision   = ref(false);
 
-const userAccountDetails = getAccountDetails();
-const userAccountType = localStorage.getItem('account_type');
+const userAccountDetails    = getAccountDetails();
+const clubAccountDetails    = getClubAccountDetails();
+const selectedAccountType   = localStorage.getItem('account_type');
 
-const serverError = ref(undefined);
-const isLoading = ref(false);
-const processBookingSubmision = ref(false);
+let scheduleId          = parseInt(localStorage.getItem('schedule_id'));
+let authUser            = JSON.parse(localStorage.getItem('user'));
+let loggedUserEmail     = localStorage.getItem('user_email').split('@')[0];
+let billing             = ref(JSON.parse(localStorage.getItem('billing_info')));
+let batchRef            = ref(null);
+let theSelectedSeats    = ref(localStorage.getItem('seat_numbers'));
+let userId              = authUser.id;
 
-let theSelectedSeats = ref([]);
-let billing = ref({});
-let creditCard = ref([]);
-let uweFlexAccountBalance = ref(userAccountDetails.balance);
-let uweFlexAccountBalanceAfter = ref(0);
 
-let creditCardAuth = ref(false);
+// By default use the personal account information
+let accountId               = userAccountDetails.id;
+let clubId                  = 0;
+let accountBalance          = ref(userAccountDetails.balance);
+let accountBalanceAfter     = ref(0);
 
-let loggedUserEmail = localStorage.getItem('user_email').split('@')[0];
-
-let tupForm = {
-    password: null
+// Update the account id and club id
+if ( selectedAccountType == 'club' ) {
+    accountId = clubAccountDetails.account.id;
+    clubId = clubAccountDetails.id;
+    accountBalance.value = clubAccountDetails.account.balance;
 }
 
-let submission = ref({
-    payment_method: 'uweflex-account'
-});
-
-theSelectedSeats.value = localStorage.getItem('seat_numbers');
-billing.value = JSON.parse(localStorage.getItem('billing_info'));
-
-let authUser = JSON.parse(localStorage.getItem('user'));
-
-let userId = authUser.id;
 
 let noMoney = computed(() => {
-    return (uweFlexAccountBalance.value < billing.value.total ? true : false);
+    return (accountBalance.value < billing.value.total ? true : false);
 });
 
-// Todo: Work on this later
-const authTopUp = () => {
-    let resp = getUserCreditCard(tupForm.password);
-}
-
-let batchRef = ref(null);
-
 let submitBooking = async () => {
-
-    let processed = 0;
 
     try {
         processBookingSubmision.value = true;
@@ -69,9 +54,9 @@ let submitBooking = async () => {
             
             let payload = {
                 bookings: [],
-                club_id : 0,
+                club_id : clubId,
                 schedule_id : scheduleId,
-                account_id : userAccountDetails.id,
+                account_id : accountId,
                 cash : 0,
                 class_name : "MULTIPLE_BOOKINGS"
             }
@@ -95,7 +80,6 @@ let submitBooking = async () => {
             console.error(err);
         }
 
-
         processBookingSubmision.value = false;
         
         await router.push({name: 'view-ticket', params:{bref: batchRef.value}})
@@ -106,10 +90,10 @@ let submitBooking = async () => {
     }
 }
 
-uweFlexAccountBalanceAfter.value = uweFlexAccountBalance.value - billing.value.total;
-
+accountBalanceAfter.value = accountBalance.value - billing.value.total;
 
 </script>
+
 
 <template>
     <SessionLayout>
@@ -124,7 +108,7 @@ uweFlexAccountBalanceAfter.value = uweFlexAccountBalance.value - billing.value.t
                     <p>Your UWE Flex Account Balance</p>
 
                     <Alert alerttype="alert alert-warning" v-if="noMoney">
-                        You are required to pay £{{ billing.total }}, but your account balance is £{{ uweFlexAccountBalance }}. Please top-up your account.
+                        You are required to pay £{{ billing.total }}, but your account balance is £{{ accountBalance }}. Please top-up your account.
                     </Alert>
 
                     <div class="row">
@@ -138,8 +122,8 @@ uweFlexAccountBalanceAfter.value = uweFlexAccountBalance.value - billing.value.t
                                             Pay Now
                                         </button>
                                     </div>
-                                    <p class="text-uppercase">{{userAccountType}}</p>
-                                    <p><span class="text-success" style="font-size: 4rem; display: block;">£{{ uweFlexAccountBalance }}</span></p>
+                                    <p class="text-uppercase">{{selectedAccountType}}</p>
+                                    <p><span class="text-success" style="font-size: 4rem; display: block;">£{{ accountBalance }}</span></p>
                                 </div>
                             </div>
                         </div>
@@ -177,7 +161,7 @@ uweFlexAccountBalanceAfter.value = uweFlexAccountBalance.value - billing.value.t
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             Balance
-                                            <span>£{{ uweFlexAccountBalanceAfter.toFixed(2) }}</span>
+                                            <span>£{{ accountBalanceAfter.toFixed(2) }}</span>
                                         </li>
                                     </ul>
 

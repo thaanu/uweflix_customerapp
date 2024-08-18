@@ -7,4 +7,7 @@ const extractUser = () => {
 const getAccountDetails = () => {
     return JSON.parse(localStorage.getItem('user_account'));
 }
-export { extractUser, getAccountDetails }
+const getClubAccountDetails = () => {
+    return JSON.parse(localStorage.getItem('club_account'));
+}
+export { extractUser, getAccountDetails, getClubAccountDetails }

@@ -2,7 +2,7 @@
 import MainLayout from '@/layouts/MainLayout.vue'
 import Carousel from '@/components/Carousel.vue'
 
-import { getPersonalAccount } from '@/models/Accounts.js';
+import { getPersonalAccount, getClub } from '@/models/Accounts.js';
 import { getMe } from '@/models/Myself.js';
 import { authenticate } from '@/models/Auth';
 
@@ -23,6 +23,8 @@ async function submitForm() {
     let user = await getMe();
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('user_account', JSON.stringify(await getPersonalAccount(user.id)));
+    localStorage.setItem('club_account', JSON.stringify(await getClub()));
+    localStorage.setItem('account_type', 'personal');
     isLoading.value = false;
     await router.push({name: 'movies'});
     return false;

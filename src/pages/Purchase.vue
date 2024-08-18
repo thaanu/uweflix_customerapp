@@ -13,15 +13,15 @@ const user = JSON.parse(localStorage.getItem('user'));
 const userFromToken = extractUser();
 
 const isClubRap = ref(userFromToken.is_club_rep);
-const accountType = ref('personal'); // by default account type is 'personal'
+const accountType = ref(localStorage.getItem('account_type')); // by default account type is 'personal'
 
 const route = useRoute();
 
 let selectedMovieId = route.params.movieid;
 
-const serverError = ref(undefined)
-const isLoading = ref(false)
-const isScheduleLoading = ref(false)
+const serverError = ref(undefined);
+const isLoading = ref(false);
+const isScheduleLoading = ref(false);
 
 const movie = ref([]);
 
@@ -61,8 +61,8 @@ onBeforeMount( async () => {
         serverError.value = err.message;
     }
 
-    isScheduleLoading.value = false
-    isLoading.value = false
+    isScheduleLoading.value = false;
+    isLoading.value = false;
 } );
 
 const setAccountType = (accType) => {

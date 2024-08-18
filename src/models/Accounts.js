@@ -5,6 +5,11 @@ async function getPersonalAccount(userId) {
     return response.data;
 }
 
+async function getClub() {
+    const response = await sendGet(`/clubs/club/me`, true);
+    return response.data;
+}
+
 async function getClubAccount(clubId) {
     const response = await sendGet(`/accounts/user/account/${clubId}`, true);
     return response.data;
@@ -15,4 +20,4 @@ async function topupAccount(payload) {
     return response.data;
 }
 
-export {getPersonalAccount, getClubAccount, topupAccount}
+export {getPersonalAccount, getClubAccount, topupAccount, getClub}
